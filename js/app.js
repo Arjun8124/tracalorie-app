@@ -4,7 +4,7 @@ class CalorieTracker {
     this._totalCalories = 0;
     this._consumedCalories = 0;
     this._burnedCalories = 0;
-    this._remainingCalories = this._setCalories;
+    this._remainingCalories = this._setCalories - this._totalCalories;
     this._meals = [];
     this._workouts = [];
     this._renderStats();
@@ -158,6 +158,10 @@ class App {
     document
       .querySelector("#workout-form")
       .addEventListener("submit", this._newWorkout.bind(this));
+
+    document
+      .querySelector("#limit-form")
+      .addEventListener("submit", this._newDailyLimit.bind(this));
   }
 
   _newMeal(e) {
@@ -191,6 +195,22 @@ class App {
       name.value = "";
       calories.value = "";
     }
+  }
+
+  _newDailyLimit(e) {
+    e.preventDefault();
+
+    const limit = document.querySelector("#limit");
+
+    if (limit.value === "" || isNaN(limit.value)) {
+      alert("Please enter a valid number");
+    }
+
+    this._tracker._setCalories = +limit.value;
+    this._tracker._remainingCalories = +limit.value;
+
+    this._tracker._renderStats();
+    limit.value = "";
   }
 }
 
