@@ -52,6 +52,54 @@ class CalorieTracker {
       this._remainingCalories;
   }
 
+  _displayMeals() {
+    document.querySelector("#meal-items").innerHTML = "";
+    this._meals.forEach((meal) => {
+      const div = document.createElement("div");
+      div.classList.add("card");
+      div.classList.add("my-2");
+      div.innerHTML = `
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between">
+            <h4 class="mx-1">${meal.name}</h4>
+            <div
+              class="fs-1 bg-primary text-white text-center rounded-2 px-2 px-sm-5"
+            >
+              ${meal.calories}
+            </div>
+            <button class="delete btn btn-danger btn-sm mx-2">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>`;
+      document.querySelector("#meal-items").appendChild(div);
+    });
+  }
+
+  _displayWorkout() {
+    document.querySelector("#workout-items").innerHTML = "";
+    this._workouts.forEach((workout) => {
+      const div = document.createElement("div");
+      div.classList.add("card");
+      div.classList.add("my-2");
+      div.innerHTML = `
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between">
+            <h4 class="mx-1">${workout.name}</h4>
+            <div
+              class="fs-1 bg-secondary text-white text-center rounded-2 px-2 px-sm-5"
+            >
+              ${workout.calories}
+            </div>
+            <button class="delete btn btn-danger btn-sm mx-2">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>`;
+      document.querySelector("#workout-items").appendChild(div);
+    });
+  }
+
   _displayProgress() {
     const progressBar = document.querySelector("#calorie-progress");
     const percentage = (this._totalCalories / this._setCalories) * 100;
@@ -78,6 +126,8 @@ class CalorieTracker {
     this._displaySetCalories();
     this._displayTotalCalories();
     this._displayProgress();
+    this._displayMeals();
+    this._displayWorkout();
   }
 }
 
