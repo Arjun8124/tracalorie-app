@@ -4,8 +4,8 @@ class CalorieTracker {
     this._totalCalories = Storage.getTotalCalories();
     this._consumedCalories = Storage.getConsumedCalories();
     this._burnedCalories = Storage.getBurnedCalories();
-    this._meals = [];
-    this._workouts = [];
+    this._meals = Storage.getMeals();
+    this._workouts = Storage.getWorkout();
     this._renderStats();
   }
 
@@ -19,6 +19,7 @@ class CalorieTracker {
     Storage.setTotalCalorie(this._totalCalories);
     Storage.setConsumedCalorie(this._consumedCalories);
     Storage.setBurnedCalorie(this._burnedCalories);
+    Storage.setMeals(this._meals);
     this._renderStats();
   }
 
@@ -33,6 +34,7 @@ class CalorieTracker {
       Storage.setTotalCalorie(this._totalCalories);
       Storage.setConsumedCalorie(this._consumedCalories);
       Storage.setBurnedCalorie(this._burnedCalories);
+      Storage.setMeals(this._meals);
       this._renderStats();
     }
   }
@@ -45,6 +47,7 @@ class CalorieTracker {
     Storage.setTotalCalorie(this._totalCalories);
     Storage.setConsumedCalorie(this._consumedCalories);
     Storage.setBurnedCalorie(this._burnedCalories);
+    Storage.setWorkouts(this._workouts);
     this._renderStats();
   }
 
@@ -61,6 +64,7 @@ class CalorieTracker {
       Storage.setTotalCalorie(this._totalCalories);
       Storage.setConsumedCalorie(this._consumedCalories);
       Storage.setBurnedCalorie(this._burnedCalories);
+      Storage.setWorkouts(this._workouts);
       this._renderStats();
     }
   }
@@ -251,6 +255,24 @@ class Storage {
     }
     return burnedCalorie;
   }
+  static getMeals() {
+    let meals;
+    if (localStorage.getItem("meals") === null) {
+      meals = [];
+    } else {
+      meals = JSON.parse(localStorage.getItem("meals"));
+    }
+    return meals;
+  }
+  static getWorkout() {
+    let workouts;
+    if (localStorage.getItem("workouts") === null) {
+      workouts = [];
+    } else {
+      workouts = JSON.parse(localStorage.getItem("workouts"));
+    }
+    return workouts;
+  }
   static setCalorieLimit(limit) {
     localStorage.setItem("calorieLimit", limit);
   }
@@ -262,6 +284,12 @@ class Storage {
   }
   static setBurnedCalorie(limit) {
     localStorage.setItem("burnedCalorie", limit);
+  }
+  static setMeals(mealArr) {
+    localStorage.setItem("meals", JSON.stringify(mealArr));
+  }
+  static setWorkouts(workoutArr) {
+    localStorage.setItem("workouts", JSON.stringify(workoutArr));
   }
   static clearStorage() {
     localStorage.clear();
