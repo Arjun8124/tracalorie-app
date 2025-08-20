@@ -225,6 +225,10 @@ class App {
     document
       .querySelector("#filter-workouts")
       .addEventListener("input", this._filterWorkout.bind(this));
+
+    document
+      .querySelector("#reset")
+      .addEventListener("click", this._resetDay.bind(this));
   }
 
   _newMeal(e) {
@@ -290,6 +294,16 @@ class App {
       return workout.name.toLowerCase().includes(typed);
     });
     this._tracker._displayWorkout(filteredArray);
+  }
+
+  _resetDay(e) {
+    this._tracker._setCalories = 2000;
+    this._tracker._totalCalories = 0;
+    this._tracker._consumedCalories = 0;
+    this._tracker._burnedCalories = 0;
+    this._tracker._meals = [];
+    this._tracker._workouts = [];
+    this._tracker._renderStats();
   }
 }
 
