@@ -1,9 +1,9 @@
 class CalorieTracker {
   constructor() {
-    this._setCalories = 2000;
-    this._totalCalories = 0;
-    this._consumedCalories = 0;
-    this._burnedCalories = 0;
+    this._setCalories = Storage.getCalorieLimit();
+    this._totalCalories = Storage.getTotalCalories();
+    this._consumedCalories = Storage.getConsumedCalories();
+    this._burnedCalories = Storage.getBurnedCalories();
     this._meals = [];
     this._workouts = [];
     this._renderStats();
@@ -16,6 +16,9 @@ class CalorieTracker {
     this._totalCalories += meal.calories;
     this._consumedCalories += meal.calories;
     this._remainingCalories -= meal.calories;
+    Storage.setTotalCalorie(this._totalCalories);
+    Storage.setConsumedCalorie(this._consumedCalories);
+    Storage.setBurnedCalorie(this._burnedCalories);
     this._renderStats();
   }
 
@@ -27,6 +30,9 @@ class CalorieTracker {
       this._totalCalories -= meal.calories;
       this._consumedCalories -= meal.calories;
       this._remainingCalories += meal.calories;
+      Storage.setTotalCalorie(this._totalCalories);
+      Storage.setConsumedCalorie(this._consumedCalories);
+      Storage.setBurnedCalorie(this._burnedCalories);
       this._renderStats();
     }
   }
@@ -36,6 +42,9 @@ class CalorieTracker {
     this._totalCalories -= workout.calories;
     this._burnedCalories += workout.calories;
     this._remainingCalories += workout.calories;
+    Storage.setTotalCalorie(this._totalCalories);
+    Storage.setConsumedCalorie(this._consumedCalories);
+    Storage.setBurnedCalorie(this._burnedCalories);
     this._renderStats();
   }
 
@@ -49,6 +58,9 @@ class CalorieTracker {
       this._totalCalories += workout.calories;
       this._burnedCalories -= workout.calories;
       this._remainingCalories -= workout.calories;
+      Storage.setTotalCalorie(this._totalCalories);
+      Storage.setConsumedCalorie(this._consumedCalories);
+      Storage.setBurnedCalorie(this._burnedCalories);
       this._renderStats();
     }
   }
@@ -202,6 +214,60 @@ class Workout {
   }
 }
 
+class Storage {
+  static getCalorieLimit(defaultLimit = 2000) {
+    let calorieLimit;
+    if (localStorage.getItem("calorieLimit") === null) {
+      calorieLimit = defaultLimit;
+    } else {
+      calorieLimit = +localStorage.getItem("calorieLimit");
+    }
+    return calorieLimit;
+  }
+  static getTotalCalories(defaultLimit = 0) {
+    let totalCalorie;
+    if (localStorage.getItem("totalCalorie") === null) {
+      totalCalorie = defaultLimit;
+    } else {
+      totalCalorie = +localStorage.getItem("totalCalorie");
+    }
+    return totalCalorie;
+  }
+  static getConsumedCalories(defaultLimit = 0) {
+    let consumedCalorie;
+    if (localStorage.getItem("consumedCalorie") === null) {
+      consumedCalorie = defaultLimit;
+    } else {
+      consumedCalorie = +localStorage.getItem("consumedCalorie");
+    }
+    return consumedCalorie;
+  }
+  static getBurnedCalories(defaultLimit = 0) {
+    let burnedCalorie;
+    if (localStorage.getItem("burnedCalorie") === null) {
+      burnedCalorie = defaultLimit;
+    } else {
+      burnedCalorie = +localStorage.getItem("burnedCalorie");
+    }
+    return burnedCalorie;
+  }
+  static setCalorieLimit(limit) {
+    localStorage.setItem("calorieLimit", limit);
+  }
+  static setTotalCalorie(limit) {
+    localStorage.setItem("totalCalorie", limit);
+  }
+  static setConsumedCalorie(limit) {
+    localStorage.setItem("consumedCalorie", limit);
+  }
+  static setBurnedCalorie(limit) {
+    localStorage.setItem("burnedCalorie", limit);
+  }
+  static clearStorage() {
+    localStorage.clear();
+  }
+}
+
 class App {
   constructor() {
     this._tracker = new CalorieTracker();
@@ -274,6 +340,7 @@ class App {
     }
 
     this._tracker._setCalories = +limit.value;
+    Storage.setCalorieLimit(limit.value);
     this._tracker._remainingCalories = +limit.value;
 
     this._tracker._renderStats();
@@ -303,6 +370,7 @@ class App {
     this._tracker._burnedCalories = 0;
     this._tracker._meals = [];
     this._tracker._workouts = [];
+    Storage.clearStorage();
     this._tracker._renderStats();
   }
 }
