@@ -20,12 +20,38 @@ class CalorieTracker {
     this._renderStats();
   }
 
+  removeMeal(id) {
+    const mealIndex = this._meals.findIndex((meal) => meal.id === id);
+    if (mealIndex !== -1) {
+      const meal = this._meals[mealIndex];
+      this._meals.splice(mealIndex, 1);
+      this._totalCalories -= meal.calories;
+      this._consumedCalories -= meal.calories;
+      this._remainingCalories += meal.calories;
+      this._renderStats();
+    }
+  }
+
   addWorkOut(workout) {
     this._workouts.push(workout);
     this._totalCalories -= workout.calories;
     this._burnedCalories += workout.calories;
     this._remainingCalories += workout.calories;
     this._renderStats();
+  }
+
+  removeWorkout(id) {
+    const workoutIndex = this._workouts.findIndex(
+      (workout) => workout.id === id
+    );
+    if (workoutIndex !== -1) {
+      const workout = this._workouts[workoutIndex];
+      this._workouts.splice(workoutIndex, 1);
+      this._totalCalories += workout.calories;
+      this._burnedCalories -= workout.calories;
+      this._remainingCalories -= workout.calories;
+      this._renderStats();
+    }
   }
 
   //private methods
@@ -67,12 +93,19 @@ class CalorieTracker {
             >
               ${meal.calories}
             </div>
-            <button class="delete btn btn-danger btn-sm mx-2">
+            <button class="delete btn btn-danger btn-sm mx-2" id=${meal.id}>
               <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
         </div>`;
       document.querySelector("#meal-items").appendChild(div);
+    });
+
+    document.querySelectorAll(".delete").forEach((button) => {
+      button.addEventListener("click", (e) => {
+        const targetId = e.target.closest("button").getAttribute("id");
+        this.removeMeal(targetId);
+      });
     });
   }
 
@@ -91,12 +124,19 @@ class CalorieTracker {
             >
               ${workout.calories}
             </div>
-            <button class="delete btn btn-danger btn-sm mx-2">
+            <button class="delete btn btn-danger btn-sm mx-2" id= ${workout.id}>
               <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
         </div>`;
       document.querySelector("#workout-items").appendChild(div);
+    });
+
+    document.querySelectorAll(".delete").forEach((button) => {
+      button.addEventListener("click", (e) => {
+        const workoutId = e.target.closest("button").getAttribute("id");
+        this.removeWorkout(workoutId);
+      });
     });
   }
 
