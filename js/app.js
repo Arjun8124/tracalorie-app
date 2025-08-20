@@ -4,7 +4,6 @@ class CalorieTracker {
     this._totalCalories = 0;
     this._consumedCalories = 0;
     this._burnedCalories = 0;
-    this._remainingCalories = this._setCalories - this._totalCalories;
     this._meals = [];
     this._workouts = [];
     this._renderStats();
@@ -75,12 +74,13 @@ class CalorieTracker {
 
   _displayRemainingCalories() {
     document.querySelector("#calories-remaining").innerText =
-      this._remainingCalories;
+      this._setCalories - this._totalCalories;
   }
 
-  _displayMeals() {
+  _displayMeals(array) {
     document.querySelector("#meal-items").innerHTML = "";
-    this._meals.forEach((meal) => {
+    const arr = array;
+    arr.forEach((meal) => {
       const div = document.createElement("div");
       div.classList.add("card");
       div.classList.add("my-2");
@@ -109,9 +109,10 @@ class CalorieTracker {
     });
   }
 
-  _displayWorkout() {
+  _displayWorkout(array) {
     document.querySelector("#workout-items").innerHTML = "";
-    this._workouts.forEach((workout) => {
+    const arr = array;
+    arr.forEach((workout) => {
       const div = document.createElement("div");
       div.classList.add("card");
       div.classList.add("my-2");
@@ -159,6 +160,19 @@ class CalorieTracker {
     }
   }
 
+  _displayFilterBars() {
+    if (this._meals.length === 0) {
+      document.querySelector("#filter-meals").style.display = "none";
+    } else {
+      document.querySelector("#filter-meals").style.display = "block";
+    }
+    if (this._workouts.length === 0) {
+      document.querySelector("#filter-workouts").style.display = "none";
+    } else {
+      document.querySelector("#filter-workouts").style.display = "block";
+    }
+  }
+
   _renderStats() {
     this._displayBurnedCalories();
     this._displayCaloriesConsumed();
@@ -166,8 +180,9 @@ class CalorieTracker {
     this._displaySetCalories();
     this._displayTotalCalories();
     this._displayProgress();
-    this._displayMeals();
-    this._displayWorkout();
+    this._displayMeals(this._meals);
+    this._displayWorkout(this._workouts);
+    this._displayFilterBars();
   }
 }
 
@@ -202,6 +217,14 @@ class App {
     document
       .querySelector("#limit-form")
       .addEventListener("submit", this._newDailyLimit.bind(this));
+
+    document
+      .querySelector("#filter-meals")
+      .addEventListener("input", this._filterMeals.bind(this));
+
+    document
+      .querySelector("#filter-workouts")
+      .addEventListener("input", this._filterWorkout.bind(this));
   }
 
   _newMeal(e) {
@@ -251,6 +274,22 @@ class App {
 
     this._tracker._renderStats();
     limit.value = "";
+  }
+
+  _filterMeals(e) {
+    const typed = e.target.value.toLowerCase();
+    let filteredArray = this._tracker._meals.filter((meal) => {
+      return meal.name.toLowerCase().includes(typed);
+    });
+    this._tracker._displayMeals(filteredArray);
+  }
+
+  _filterWorkout(e) {
+    const typed = e.target.value.toLowerCase();
+    let filteredArray = this._tracker._workouts.filter((workout) => {
+      return workout.name.toLowerCase().includes(typed);
+    });
+    this._tracker._displayWorkout(filteredArray);
   }
 }
 
